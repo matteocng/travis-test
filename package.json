@@ -1,0 +1,38 @@
+{
+  "name": "travis-test",
+  "description": "Travis test",
+  "homepage": "https://github.com/matteocng/travis-test#readme",
+  "version": "1.0.0",
+  "main": "./lib",
+  "author": {
+    "email": "matteocng+npmjs@outlook.com",
+    "name": "matteocng",
+    "url": "https://github.com/matteocng"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matteocng/travis-test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/matteocng/travis-test/issues"
+  },
+  "keywords": [
+    "react",
+    "flag-icon",
+    "flag-icons",
+    "flag-icon-css",
+    "react-css-modules"
+  ],
+  "dependencies": {
+    "tape": "^4.6.3"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node src/__tests__/index.js"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+  }
+}

@@ -1,0 +1,33 @@
+sudo: required
+language: node
+services:
+  - docker
+before_install:
+  - sudo add-apt-repository ppa:duggan/bats --yes
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq bats
+  - docker version
+  # Export variables used in the Docker image makefile.
+  - export TRAVIS_COMMIT_SHORT=${TRAVIS_COMMIT::8}
+  - export DOCKER_REPO=$TRAVIS_REPO_SLUG
+  - export IS_GIT_MASTER=`[ ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} == "master" ]`
+  - export GIT_BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
+  # Build the Docker image necessary for the next steps.
+  - make build_travis
+  # Run tests for the Docker image.
+  - make test
+install:
+  - ./run yarn --no-progress
+script:
+  # Run tests for the module using the Docker image we have built in before_install.
+  - ./run yarn test
+after_success:
+  # Push the Docker image to the registry if it is not a PR.
+  - >
+    if [ "$TRAVIS_BRANCH" == "master" ]; then
+    make push;
+    fi;
+env:
+  global:
+    - secure: "PO88Y6Aob4jeeKrl1XobL9GVbq9Isjevg4+DKKl1IhXdatPvoPBHCKTdGDsgBVnxsHrja1+P8MCKv6JJAC3wY1VBmVnRTQdtVaxU3DN2CC9gywnZDf6ZwXbE7oCUrPSPp+ApKMhnc2T2dv7LNKAa2K/mX8H3sha9sdnZmi/WLcsdCjNyvvhLgHTP6Ap0j0xHysLIzGMszmvRm13YTdLXAAXLYpeaHOm3uzbGOXJFrkP+pv0DvMKcnR1DIgFGzOhjOT4Tf1Pdy8YOLjh3fsU0wO28hk2EVW7CaPuZ/IIN7uiJxhxFY35ABhZV9YHyXVZ9kzk8Z7tCkwBtLQoat93+L3bR+ux58T7cOyx4LRw6wiDW5akiLL+/FXNPsa5XI9sgdKd6nRyaQtTu03ArhD5gnpFFcop/1P1tTa3L7qeM/TWu69GU/K0ebJSVXpGVtAEKWjaZXToXzUFt0IY+uZnZrQmO25FaHLd0DMwX31vCyxRV8pkSGf8m+vZch/Clr5rqI9X3hX/VKL0ijN++JLEmm5RF6paX4FRG8tH3Z/J54aqw22ErnmYIXKlUsJBvCb2OhstuRd2Qmj1kqCOre9fcV9tgAn2RAiEkfd6dpG0NtVAhXbT87ydOZHVqjrw1Vh9OioKY12OauDfH53liTHcKnJiIXW6IcfjkAOjWxNeXN5M=" # DOCKER_USERNAME
+    - secure: "lZAR0Pqc1bW7oS0Sd3HmSWRgxkRrCJBcYFDZCejaUvghr44VT30J2sZdtR9Y91KGwfff4pSD1jfGBrDDvUYON9RC0rEab2rkpI2vnPtSIgcjtjCvZt8CxBegM+fYP9n7Rr1hzVYW85aeS/gJzt/6TL7tDHtK+V4hcTklAa+egJlUd5YMYO1yWuk9NOBr0nXPPkiwOz94ldS4inb5ypczvVVbFPpxlIbUNJcFxTPXN1Xg65+sWlX+jiAXx1LR29fgbTID4D0qs8rFaozh2R3SCHwht4UDGiepa65/RYm1qbBfJZ1MihnSM0qFbSdvLCJILn9ZLEuzgHX+oEGEVkLAScZ14Axf3n2xizqGSVkv/TIWqFIkGwdfiyLDqF0sDfMYX4jCPj96amCwOudjX9Co9MjM8Tn4BPXDCMmJgZSGuoaytZXVgNDqRlAKEHvrijxTQA8xCVWHxfY2C4MxF049VzTYKv/z5HnenGD+NLLUVld5ZuLp1lE75oOOiGIVGvjt01JDC1RHCGzEp0QjX87XlnQu9RLM3+50w3x1NxeMKKzlJaJy7NMqsNWBmfkkVndV3GjqMbO4MvFqSA2SELWrF34j7UTYJI4zJjz7iU0/wKA7S+6D26lC7crT7E9WMqIysO5hR4NQy+ZDvmOTq98arv8r/AdWJ11+Qg63YH9b7dI=" # DOCKER_PASSWORD

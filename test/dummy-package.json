@@ -1,0 +1,14 @@
+{
+  "name": "dummy-node-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lorem": "echo lorem ok",
+    "ipsum": "echo ipsum ok",
+    "ipsum:dolor": "echo ipsum:dolor ok",
+    "lorem:ipsum dolor": "echo lorem:ipsum dolor ok",
+    "vestibulum:varius_porttitor": "echo vestibulum:varius_porttitor ok"
+  }
+}
